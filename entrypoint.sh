@@ -5,13 +5,29 @@ set -e
 
 set_xauth() {
 	echo xauth add $DISPLAY . $XAUTH
-	touch /.Xauthority
+	touch /root/.Xauthority
 	xauth add $DISPLAY . $XAUTH
 }
 
 custom_properties() {
-	if [ -f /jobs/kettle.properties ] ; then
-		cp /jobs/kettle.properties $KETTLE_HOME
+	if [ -f /jobs/.kettle/kettle.properties ] ; then
+		cp /jobs/.kettle/kettle.properties $KETTLE_HOME/.kettle/kettle.properties
+		echo "Custom kettle.properties ok!"
+	else 
+		echo "Using standard kettle.properties"
+	fi
+	if [ -f /jobs/.kettle/shared.xml ] ; then
+		cp /jobs/.kettle/shared.xml $KETTLE_HOME/.kettle/shared.xml
+		echo "Custom shared.xml ok!"
+	else 
+		echo "No shared.xml selected"
+	fi
+	driver_lists=(`find /libs -maxdepth 1 -name "*.jar"`)
+	if [ ${#driver_lists[@]} -gt 0 ]; then 
+		cp /libs/* $KETTLE_HOME/lib
+		echo "Custom libs ok!"
+	else 
+		echo "No custom libs selected"
 	fi
 }
 
@@ -36,11 +52,8 @@ run_spoon() {
 
 print_usage() {
 echo "
-
 Usage:	$0 COMMAND
-
 Pentaho Data Integration (PDI)
-
 Options:
   runj filename		Run job file
   runt filename		Run transformation file
