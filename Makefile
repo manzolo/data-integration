@@ -1,4 +1,5 @@
-IMAGE=pdi
+CONTAINER_NAME=data-integration
+IMAGE=manzolo/$(CONTAINER_NAME)
 APP=spoon
 
 .PHONY: help
@@ -18,6 +19,7 @@ test:
 	@which docker
 	@which docker-compose
 	@which xauth
+	docker container run --rm --name $(CONTAINER_NAME) -v `pwd`/jobs:/jobs -v `pwd`/libs:/libs $(IMAGE) runj dummy.kjb
 
 .PHONY: setup
 setup: Dockerfile
@@ -27,6 +29,11 @@ setup: Dockerfile
 run:
 	@echo $(APP)
 	docker run -it --rm -v /tmp/.X11-unix/:/tmp/.X11-unix/:ro \
-	-v $$(pwd):/root/data \
+	--name $(CONTAINER_NAME) \
+	-v `pwd`/jobs:/jobs \
+	-v `pwd`/libs:/libs \
 	-e XAUTH=$$(xauth list|grep `uname -n` | cut -d ' ' -f5) -e "DISPLAY" \
        	$(IMAGE) $(APP)
+       	
+#docker container run --rm --name data-integration -v `pwd`/jobs:/jobs -v `pwd`/libs:/libs manzolo/data-integration runj dummy.kjb -param:PARAMETER_NAME=PARAMETER_VALUE
+

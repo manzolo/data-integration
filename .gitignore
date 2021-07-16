@@ -1,7 +1,10 @@
 data/
+jobs/
+libs/
+.kettle/
 .swt/
 .java/
 .pentaho/
 .Xauthority
 .ipynb_checkpoints/
-pdi-ce-7.1.0.0-12.zip
+pdi-ce-*.zip

@@ -1,8 +1,8 @@
 #!/bin/bash
 #set -x
 
-IMAGE=andrespp/pdi
-CONTAINER_NAME=spoon
+CONTAINER_NAME=data-integration
+IMAGE=manzolo/$CONTAINER_NAME
 
 is_running(){
 	#  Returns (echo) CONTAINER ID if container exists and is running, and
@@ -19,7 +19,8 @@ CONTAINER_ID=$(is_running)
 if [ -z $CONTAINER_ID ] ; then
 	# Container not running, start it
 	docker run -it --rm -v /tmp/.X11-unix/:/tmp/.X11-unix/:ro \
-	-v $(pwd):/jobs \
+	-v $(pwd)/jobs:/jobs \
+	-v $(pwd)/libs:/libs \
 	-e XAUTH=$(xauth list|grep `uname -n` | cut -d ' ' -f5) -e "DISPLAY" \
 	--name $CONTAINER_NAME \
        	$IMAGE spoon
