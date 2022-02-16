@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:8-buster
 MAINTAINER Andrea Manzi manzolo@libero.it
 
 # Set Environment Variables
